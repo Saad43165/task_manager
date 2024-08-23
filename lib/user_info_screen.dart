@@ -1,32 +1,63 @@
+import 'dart:async';
+
 import 'package:final_flutter_project/dashboard_screen.dart';
+import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UserInfoScreen extends StatefulWidget {
-  const UserInfoScreen({super.key});
+  final String name;
+  final String email;
+  final String age;
+  const UserInfoScreen({super.key,  this.name = '',  this.email = '',  this.age = ''});
 
   @override
-  State<UserInfoScreen> createState() => _MyHomePageState();
+  State<UserInfoScreen> createState() => _UserInfoScreenState();
 }
 
-class _MyHomePageState extends State<UserInfoScreen> {
+class _UserInfoScreenState extends State<UserInfoScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
+   TextEditingController _nameController = TextEditingController();
+   TextEditingController _emailController = TextEditingController();
+   TextEditingController _ageController = TextEditingController();
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _emailController = TextEditingController(text: widget.email);
+    _nameController = TextEditingController(text: widget.name);
+    _ageController = TextEditingController(text: widget.age.toString());
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'T A S K  M A N A G E R',
+        backgroundColor: Colors.white,
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Colors.blue, Colors.blueGrey],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: AppBar(
+              title: Text(
+                'User Information',
+                style: GoogleFonts.alice(fontSize: 28),
+              ),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              centerTitle: true,
+              automaticallyImplyLeading: false, // Remove the back arrow
+            ),
           ),
-          backgroundColor: Colors.blue[300],
-          actions: [
-
-          ],
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -34,9 +65,19 @@ class _MyHomePageState extends State<UserInfoScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height:200),
-
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: CircleAvatar(
+                    radius: 100,
+                    child: CircleAvatar(
+                      radius: 100,
+                      child: Image(
+                        image: AssetImage('assets/images/user_info.png'),
+                      ),
+                    ),
+                  ),
+                ),
                 Text(
                   'User Information',
                   style: GoogleFonts.alice(
@@ -69,12 +110,11 @@ class _MyHomePageState extends State<UserInfoScreen> {
                             borderSide: const BorderSide(width: 2, color: Colors.blue),
                             borderRadius: BorderRadius.circular(10.0),
                           ),
-
                           labelText: 'Name',
                           labelStyle: const TextStyle(color: Colors.blue),
                           hintText: 'Enter your name',
-                          prefixIcon: Icon(Icons.person,color: Colors.blueGrey,),
-                          hintStyle: const TextStyle(fontStyle: FontStyle.italic,color: Colors.blueGrey),
+                          prefixIcon: const Icon(CupertinoIcons.person_add, color: Colors.lightBlue, size: 22),
+                          hintStyle: const TextStyle(fontStyle: FontStyle.italic, color: Colors.blueGrey),
                         ),
                         keyboardType: TextInputType.name,
                         validator: (value) {
@@ -99,7 +139,6 @@ class _MyHomePageState extends State<UserInfoScreen> {
                           errorBorder: OutlineInputBorder(
                             borderSide: const BorderSide(width: 2, color: Colors.blue),
                             borderRadius: BorderRadius.circular(10.0),
-
                           ),
                           border: OutlineInputBorder(
                             borderSide: const BorderSide(width: 2, color: Colors.blue),
@@ -108,8 +147,8 @@ class _MyHomePageState extends State<UserInfoScreen> {
                           labelText: 'Email',
                           labelStyle: const TextStyle(color: Colors.blue),
                           hintText: 'Enter your email',
-                          prefixIcon: Icon(Icons.email_outlined,color: Colors.blueGrey,),
-                          hintStyle: const TextStyle(fontStyle: FontStyle.italic,color: Colors.blueGrey),
+                          prefixIcon: const Icon(CupertinoIcons.mail, color: Colors.lightBlue, size: 22),
+                          hintStyle: const TextStyle(fontStyle: FontStyle.italic, color: Colors.blueGrey),
                         ),
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
@@ -144,8 +183,8 @@ class _MyHomePageState extends State<UserInfoScreen> {
                           labelText: 'Age',
                           labelStyle: const TextStyle(color: Colors.blue),
                           hintText: 'Enter your age',
-                          prefixIcon: Icon(Icons.numbers_outlined,color: Colors.blueGrey,),
-                          hintStyle: const TextStyle(fontStyle: FontStyle.italic,color: Colors.blueGrey),
+                          prefixIcon: const Icon(CupertinoIcons.number, color: Colors.lightBlue, size: 20),
+                          hintStyle: const TextStyle(fontStyle: FontStyle.italic, color: Colors.blueGrey),
                         ),
                         keyboardType: TextInputType.number,
                         validator: (value) {
@@ -158,42 +197,53 @@ class _MyHomePageState extends State<UserInfoScreen> {
                         },
                       ),
                       const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DashboardScreen(
-                                  name: _nameController.text,
-                                  email: _emailController.text,
-                                  age: int.parse(_ageController.text),
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                        child: Text(
-                          'Submit',
-                          style: GoogleFonts.alice(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Colors.blue, Colors.blueGrey],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                           ),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DashboardScreen(
+                                    name: _nameController.text,
+                                    email: _emailController.text,
+                                    age: _ageController.text
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            minimumSize: const Size(150, 40),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                           ),
-                          minimumSize: const Size(150, 40),
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          child: Text(
+                            'Submit',
+                            style: GoogleFonts.alice(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 160),
+                const SizedBox(height: 100),
                 Container(
                   alignment: Alignment.bottomCenter,
                   child: Column(
@@ -201,17 +251,17 @@ class _MyHomePageState extends State<UserInfoScreen> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        'Enter the information above. The details will be passed to the next screen.',
+                        'Enter the Valid Information. This Information will be used later.',
                         style: GoogleFonts.adventPro(
-                          fontSize: 13,
+                          fontSize: 15,
                           fontStyle: FontStyle.italic,
                         ),
                         softWrap: true,
-                      )
+                      ),
                     ],
                   ),
                 ),
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
               ],
             ),
           ),
